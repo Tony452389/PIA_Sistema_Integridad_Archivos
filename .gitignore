@@ -1,0 +1,21 @@
+# Ejecutables
+file_monitor
+*.exe
+
+# Archivos objeto
+*.o
+
+# Logs
+*.log
+
+# Archivos temporales
+*.tmp
+
+# Archivos generados
+baseline.txt
+
+# Carpetas del sistema
+.DS_Store
+
+# Configuración VS Code
+.vscode/
