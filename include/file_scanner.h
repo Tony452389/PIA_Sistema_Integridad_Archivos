@@ -1,4 +1,5 @@
 #ifndef FILE_SCANNER_H
+
 #define FILE_SCANNER_H
 
 #include <string>

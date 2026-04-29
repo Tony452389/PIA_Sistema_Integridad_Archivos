@@ -1,4 +1,5 @@
 #include "file_scanner.h"
+#include "hash_engine.h"
 
 #include <iostream>
 
@@ -9,24 +10,25 @@ int main(){
               << filePath
               << std::endl;
 
-    std::cout << "Reading file..."
+    std::cout << "Leyendo el archivo..."
               << std::endl;
 
     std::string content = readFile(filePath);
 
     if(content.empty()){
-        std::cout << "Failed to read the file."
+        std::cout << "Falla en la lectura del Archivo."
                   << std::endl;
         
         return 1;
     }
 
-    std::cout << "File read successfully."
+    std::cout << "Generando Hash..."
               << std::endl;
 
-    std::cout << "\nFile content:\n";
-
-    std::cout << content
+    unsigned long hash = generateHash(content);
+          
+    std::cout << "Hash generado: "
+              << hash
               << std::endl;
 
     return 0;
