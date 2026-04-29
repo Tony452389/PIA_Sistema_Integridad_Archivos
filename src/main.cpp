@@ -1,10 +1,13 @@
 #include "file_scanner.h"
 #include "hash_engine.h"
+#include "baseline_manager.h"
 
 #include <iostream>
 
 int main(){
     std::string filePath = "data/test_file.txt";
+
+    std::string baselinePath = "data/baseline.txt";
 
     std::cout << "File: "
               << filePath
@@ -25,11 +28,40 @@ int main(){
     std::cout << "Generando Hash..."
               << std::endl;
 
-    unsigned long hash = generateHash(content);
+    unsigned long currentHash = generateHash(content);
           
     std::cout << "Hash generado: "
-              << hash
+              << currentHash
               << std::endl;
+
+    if(!baselineExists(baselinePath)){
+        std::cout << "Baseline no encontrado."
+                  << std::endl;
+        
+        saveBaseline(baselinePath, currentHash);
+
+        std::cout << "Status: SEGURO"
+                  << std::endl;
+
+        return 0;
+    }
+
+    std::cout << "Baseline encontrado."
+                  << std::endl;
+
+    unsigned long storedHash = loadBaseline(baselinePath);
+    
+    std::cout << "Comparando hashes..."
+                  << std::endl;
+
+    if(currentHash == storedHash){
+        std::cout << "Status: SEGURO"
+                  << std::endl;
+    }
+    else{
+        std::cout << "Status: MODIFICADO"
+                  << std::endl;
+    }
 
     return 0;
 }
