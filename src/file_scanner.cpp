@@ -1,3 +1,25 @@
+/*
+==========================================
+Proyecto: Sistema de Integridad de Archivos (SIA)
+
+Modulo:
+File Scanner
+
+Responsable:
+Ricardo Estrada
+
+Descripción:
+Módulo encargado de la lectura del
+contenido del archivo objetivo.
+
+Verifica la existencia del archivo
+y retorna su contenido como string.
+
+Fecha:
+Abril 2026
+==========================================
+*/
+
 #include "file_scanner.h"
 
 #include <fstream>

@@ -1,3 +1,27 @@
+/*
+==========================================
+Proyecto: Sistema de Integridad de Archivos (SIA)
+
+Archivo:
+main.cpp
+
+Responsable:
+Josué Castro
+
+Descripción:
+Archivo principal del sistema.
+Coordina la ejecución de los módulos:
+File Scanner, Hash Engine,
+Baseline Manager y Risk Analyzer.
+
+Responsable también de la integración
+general del sistema.
+
+Fecha:
+Abril 2026
+==========================================
+*/
+
 #include "file_scanner.h"
 #include "hash_engine.h"
 #include "baseline_manager.h"

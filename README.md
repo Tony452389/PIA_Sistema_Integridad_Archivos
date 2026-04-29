@@ -4,28 +4,28 @@
 
 Desarrollar un sistema modular en C++ capaz de detectar cambios en archivos mediante el uso de funciones hash y comparación contra un baseline previamente almacenado.
 
-El sistema permitirá identificar modificaciones en archivos críticos simulando técnicas reales utilizadas en herramientas de ciberseguridad.
+El sistema permitirá identificar modificaciones en archivos críticos simulando técnicas reales utilizadas en herramientas de ciberseguridad para monitoreo de integridad de archivos.
 
 ---
 
 ## Descripción Técnica
 
-Este proyecto implementa un **File Integrity Monitoring System (FIM)** desarrollado en C++, diseñado para:
+Este proyecto implementa un **Sistema de Integridad de Archivos (SIA)** desarrollado en C++, bajo una arquitectura modular.
+
+El sistema realiza las siguientes operaciones:
 
 * Leer archivos del sistema
 * Generar un valor hash representativo del contenido
 * Guardar un baseline inicial
 * Comparar hashes en ejecuciones posteriores
-* Detectar cambios en archivos monitoreados
-
-El sistema está diseñado bajo una **arquitectura modular**, permitiendo la separación clara de responsabilidades entre componentes.
+* Detectar modificaciones en archivos
 
 Los módulos principales del sistema son:
 
-* **File Scanner:** Lectura de archivos
-* **Hash Engine:** Generación de hashes
-* **Baseline Manager:** Gestión del baseline
-* **Risk Analyzer:** Clasificación del estado del archivo
+* **File Scanner:** Lectura del archivo objetivo
+* **Hash Engine:** Generación del hash del contenido
+* **Baseline Manager:** Creacion y Lectura del Baseline
+* **Risk Analyzer:** Evaluacion del estado del archivo
 
 ---
 
@@ -33,7 +33,7 @@ Los módulos principales del sistema son:
 
 ### Alcance (Primera Entrega)
 
-El sistema será capaz de:
+El sistema actualmente es capaz de:
 
 * Leer un archivo fijo ubicado en:
 
@@ -48,17 +48,20 @@ data/test_file.txt
 SAFE
 MODIFIED
 
+* Compilar correctamente mediante Makefile
+* Ejecutarse en entorno Linux dentro de una Maquina Virtual
+
 ---
 
 ### Límites (Primera Entrega)
 
-No se implementará aún:
+No se implementá aún:
 
 * Monitoreo de múltiples archivos
-* Entrada interactiva por usuario
+* Seleccion dinamica de archivos
 * Configuración mediante archivos externos
+* Uso de algoritmos criptografcos (SHA256)
 * Monitoreo periódico automático
-* Clasificación avanzada de riesgos
 
 Estas funcionalidades se desarrollarán en entregas posteriores.
 
@@ -127,18 +130,16 @@ PIA_Sistema_Integridad_Archivos/
 
 ## Integrantes y Responsabilidades Técnicas
 
-(Asignación inicial sugerida)
-
-Integrante 1 — File Scanner
+Ricardo Hervey Estrada Garcia— File Scanner
 Responsable de la lectura de archivos y verificación de existencia.
 
-Integrante 2 — Hash Engine
+Marco Antonio Guadalupe — Hash Engine
 Responsable de la generación del hash del contenido del archivo.
 
-Integrante 3 — Baseline Manager
+Josue Israel Castro Aguilar — Baseline Manager e Integracion
 Responsable del almacenamiento y comparación del baseline.
 
-Integrante 4 — Risk Analyzer
+Sergio Pedro Sepulveda Rodriguez — Risk Analyzer
 Responsable de la interpretación del estado del archivo.
 
 ---
@@ -153,6 +154,8 @@ Herramientas:
 
 * g++
 * Make
+* Git
+* Github
 * Visual Studio Code
 * Ubuntu Virtual Machine
 
@@ -160,21 +163,17 @@ Herramientas:
 
 ## Estado Actual del Proyecto
 
-Fase: Desarrollo inicial (Primer Avance)
+Fase:
 
-Funcionalidad mínima implementada:
+Primer Avance - Funcionalidad Base Implementada
 
-* Lectura de archivo
-* Generación de hash simple
-* Creación de baseline
-* Comparación de hashes
-* Detección de cambios
+El sistema actualmente:
 
-Funcionalidad en desarrollo:
-
-* Modularización completa
-* Clasificación de eventos
-* Mejora del sistema de hashing
+* Compila correctamente
+* Ejecuta sin errores
+* Genera Hashes
+* Crea Baseline
+* Detecta modificaciones
 
 ---
 
@@ -183,3 +182,5 @@ Funcionalidad en desarrollo:
 El sistema utiliza un algoritmo de hash simple basado en operaciones aritméticas para el primer avance.
 
 En fases posteriores se migrará a algoritmos criptográficos más robustos como SHA256.
+
+El sistema se encuentra listo para expansion en la siguiente fase del proyecto.

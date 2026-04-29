@@ -1,3 +1,29 @@
+/*
+==========================================
+Proyecto: Sistema de Integridad de Archivos (SIA)
+
+Moduloo:
+Baseline Manager
+
+Responsable:
+Josué Castro
+
+Descripción:
+Módulo encargado de la gestión del
+baseline del sistema.
+
+Funciones principales:
+
+- Verificar existencia del baseline
+- Guardar hash inicial
+- Leer hash almacenado
+- Preparar datos para comparación
+
+Fecha:
+Abril 2026
+==========================================
+*/
+
 #include "baseline_manager.h"
 
 #include <fstream>
