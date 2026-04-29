@@ -1,6 +1,7 @@
 #include "file_scanner.h"
 #include "hash_engine.h"
 #include "baseline_manager.h"
+#include "risk_analyzer.h"
 
 #include <iostream>
 
@@ -54,14 +55,12 @@ int main(){
     std::cout << "Comparando hashes..."
                   << std::endl;
 
-    if(currentHash == storedHash){
-        std::cout << "Status: SEGURO"
-                  << std::endl;
-    }
-    else{
-        std::cout << "Status: MODIFICADO"
-                  << std::endl;
-    }
+    std::string status = analyzeRisk(currentHash, storedHash);
+
+
+    std::cout << "Status: "
+              << status
+              << std::endl;
 
     return 0;
 }
