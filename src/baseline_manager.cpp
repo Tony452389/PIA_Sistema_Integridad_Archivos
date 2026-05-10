@@ -26,6 +26,8 @@ Abril 2026
 
 #include "baseline_manager.h"
 
+#include <sqlite3.h>
+
 #include <fstream>
 #include <iostream>
 
@@ -70,4 +72,22 @@ unsigned long loadBaseline(const std::string& path){
     file.close();
 
     return storedHash;
+}
+
+void initializeDatabase(){
+    sqlite3* db;
+
+    int result = sqlite3_open("data/baseline.db", &db);
+
+    if(result == SQLITE_OK){
+        std::cout << "Database initialized successfully!"
+                  << std::endl;
+    }
+    else{
+        std::cout << "Error initializing database."
+                  << std::endl;
+    }
+
+    sqlite3_close(db);
+    
 }

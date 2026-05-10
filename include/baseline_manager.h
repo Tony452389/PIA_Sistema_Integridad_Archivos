@@ -13,4 +13,7 @@ void saveBaseline(const std::string& path, unsigned long hash);
 //Lee el hash desde el baseline
 unsigned long loadBaseline(const std::string& path);
 
+//Funcion temporal para crear DB
+void initializeDatabase();
+
 #endif

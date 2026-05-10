@@ -13,6 +13,7 @@ file_monitor
 
 # Archivos generados
 baseline.txt
+data/*.db
 
 # Carpetas del sistema
 .DS_Store

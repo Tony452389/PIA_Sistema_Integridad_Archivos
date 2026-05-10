@@ -30,6 +30,9 @@ Abril 2026
 #include <iostream>
 
 int main(){
+
+    initializeDatabase();
+    
     std::string filePath = "data/test_file.txt";
 
     std::string baselinePath = "data/baseline.txt";

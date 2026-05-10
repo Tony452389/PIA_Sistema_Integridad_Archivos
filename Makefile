@@ -10,7 +10,7 @@ SRC = src/main.cpp \
 TARGET = file_monitor
 
 all:
-	$(CXX) $(CXXFLAGS) $(SRC) -o $(TARGET)
+	$(CXX) $(CXXFLAGS) $(SRC) -o $(TARGET) -lsqlite3
 
 clean:
 	rm -f $(TARGET)
