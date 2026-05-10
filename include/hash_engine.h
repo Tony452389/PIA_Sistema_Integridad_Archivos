@@ -4,8 +4,6 @@
 #include <string>
 #include <iostream>
 
-unsigned long generateHash(std::istream& dataStream);
-
-unsigned long generateHash(const std::string& content);
+std::string generateHash(std::istream& dataStream);
 
 #endif
