@@ -21,18 +21,18 @@ Abril 2026
 */
 
 #include "hash_engine.h"
-#include <fstream>
 
-unsigned long generateHash(const std::string& filePath) {
-    std::ifstream file(filePath, std::ios::binary);
+std::string generateHash(std::istream& dataStream) {
     unsigned long hash = 0;
-    char c;
+    const size_t BUFFER_SIZE = 4096;
+    char buffer[BUFFER_SIZE];
 
-    // Procesamos el archivo carácter por carácter (o por bloques) 
-    // sin cargarlo todo en un string gigante
-    while (file.get(c)) {
-        hash = hash * 31 + static_cast<unsigned char>(c); [cite: 11]
+    while (dataStream.read(buffer, BUFFER_SIZE) || dataStream.gcount() > 0) {
+        for (std::streamsize i = 0; i < dataStream.gcount(); ++i) {
+            hash = hash * 31 + static_cast<unsigned char>(buffer[i]);
+        }
     }
 
-    return hash;
+    // Conversión a std::string antes de retornar
+    return std::to_string(hash);
 }
