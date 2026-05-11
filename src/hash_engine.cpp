@@ -22,12 +22,17 @@ Abril 2026
 
 #include "hash_engine.h"
 
-unsigned long generateHash(const std::string& content){
+std::string generateHash(std::istream& dataStream) {
     unsigned long hash = 0;
-    
-    for(char c : content){
-        hash = hash *31 + c;
+    const size_t BUFFER_SIZE = 4096;
+    char buffer[BUFFER_SIZE];
+
+    while (dataStream.read(buffer, BUFFER_SIZE) || dataStream.gcount() > 0) {
+        for (std::streamsize i = 0; i < dataStream.gcount(); ++i) {
+            hash = hash * 31 + static_cast<unsigned char>(buffer[i]);
+        }
     }
 
-    return hash;
+    // Conversión a std::string antes de retornar
+    return std::to_string(hash);
 }
