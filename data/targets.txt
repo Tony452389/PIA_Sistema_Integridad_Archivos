@@ -1,4 +1,4 @@
-data/notes.txt
 data/config.txt
+data/notes.txt
 data/system.conf
 data/temp.log

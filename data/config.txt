@@ -1,4 +1,2 @@
-system_mode=normal
-debug=false
-version=1.0
-change_test
+system_mode=production
+max_connections=32

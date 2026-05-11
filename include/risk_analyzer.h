@@ -14,6 +14,6 @@ bool isFileDeleted(
     bool fileExistsonSystem
 );
 
-
+void processFile(const std::string& filePath);
 
 #endif

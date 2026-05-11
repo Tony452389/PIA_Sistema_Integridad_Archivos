@@ -78,6 +78,23 @@ static int callbackLastHash(
     return 0;
 }
 
+//Callback de apoyo para crear tabla de resumen
+static int callbackDisplayBaselines(
+    void* data,
+    int argc,
+    char** argv,
+    char** azColName
+){
+   std::cout
+        << std::left
+        << std::setw(25) << argv[0]
+        << std::setw(25) << argv[1]
+        << std::setw(25) << argv[2]
+        << std::endl;
+
+    return 0;
+}
+
 void initializeDatabase(){
     sqlite3* db;
 
@@ -418,5 +435,76 @@ std::string getCurrentTimestamp(){
     );
 
     return timestamp.str();
+}
+
+void displayLatestBaselines(){
+    sqlite3* db;
+
+    int result = sqlite3_open("data/baseline.db", &db);
+
+    if(result != SQLITE_OK){
+        std::cout << "Error opening database."
+                  << std::endl;
+
+        return;
+    }
+    
+    std::string sql =
+        "SELECT Files.FilePath, "
+        "Baselines.EventType, "
+        "Baselines.Timestamp "
+
+        "FROM Baselines "
+
+        "INNER JOIN Files "
+        "ON Files.FileID = Baselines.FileID "
+
+        "WHERE BaselineID IN ( "
+
+            "SELECT MAX(BaselineID) "
+            "FROM Baselines "
+            "GROUP BY FileID"
+
+        ") "
+
+        "ORDER BY Files.FileID";
+
+    char* errorMessage = nullptr;
+
+    std::cout << std::endl;
+
+    std::cout << "========================== Latest Baselines ========================="
+              << std::endl;
+
+    std::cout 
+        << std::left
+        << std::setw(25) << "File"
+        << std::setw(25) << "Event"
+        << std::setw(25) << "Timestamp"
+        << std::endl;
+
+    std::cout << std::string(69, '-')
+              << std::endl;
+
+    result = sqlite3_exec(
+        db,
+        sql.c_str(),
+        callbackDisplayBaselines,
+        nullptr,
+        &errorMessage
+    );
+
+    std::cout << std::string(69, '=')
+              << std::endl;
+
+    if(result != SQLITE_OK){
+        std::cout << "Error displaying baselines: "
+                  << errorMessage
+                  << std::endl;
+
+        sqlite3_free(errorMessage);
+    }
+
+    sqlite3_close(db);
 }
 

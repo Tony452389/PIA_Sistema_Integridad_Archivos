@@ -40,4 +40,6 @@ std::string getLastHash(int fileID);
 
 std::string getCurrentTimestamp();
 
+void displayLatestBaselines();
+
 #endif
