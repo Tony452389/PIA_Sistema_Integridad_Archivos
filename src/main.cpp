@@ -33,13 +33,30 @@ int main(){
 
     initializeDatabase();
 
-    insertFile("notes.txt", "data/notes.txt");
+     if(!fileExistsInDatabase("data/notes.txt")){
+        insertFile("notes.txt", "data/notes.txt");
+    }
 
-    insertFile("config.text", "data/config.txt");
+    if(!fileExistsInDatabase("data/config.txt")){
+        insertFile("config.text", "data/config.txt");
+    }
 
-    insertFile("system.conf", "data/system.conf");
+    if(!fileExistsInDatabase("data/system.conf")){
+        insertFile("system.conf", "data/system.conf");
+    }
 
-    insertFile("temp.log", "data/temp.log");
+    if(!fileExistsInDatabase("data/temp.log")){
+        insertFile("temp.log", "data/temp.log");
+    }
+
+    int fileID = getFileID("data/config.txt");
+
+    insertBaseline(
+        fileID,
+        "123456789",
+        "2026-05-10 15:00",
+        "NEW"
+    );
 
     return 0;
 

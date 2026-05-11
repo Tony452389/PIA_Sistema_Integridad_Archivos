@@ -32,6 +32,34 @@ Abril 2026
 #include <iostream>
 #include <string>
 
+//Callback de apoyo para capturar FileID
+static int callbackFileID(
+    void* data,
+    int argc,
+    char** argv,
+    char** azColName
+){
+    if(argc > 0 && argv[0] != nullptr){
+        *(static_cast < int* > (data)) = std::stoi(argv[0]);
+    }
+
+    return 0;
+}
+
+//Callback de apoyo para evitar duplicados
+static int callbackFileExists(
+    void* data,
+    int argc,
+    char** argv,
+    char** azColName
+){
+    bool* exists = static_cast <bool*> (data);
+
+    *exists = true;
+
+    return 0;
+}
+
 bool baselineExists(const std::string& path){
     std::ifstream file(path);
 
@@ -128,7 +156,7 @@ void initializeDatabase(){
     );
 
     if(result != SQLITE_OK){
-        std::cout << "Error creating Files table:"
+        std::cout << "Error creating Files table: "
                   << errorMessage
                   << std::endl;
 
@@ -148,7 +176,7 @@ void initializeDatabase(){
     );
 
     if(result != SQLITE_OK){
-        std::cout << "Error creating Baselines table:"
+        std::cout << "Error creating Baselines table: "
                   << errorMessage
                   << std::endl;
 
@@ -193,7 +221,7 @@ void insertFile(const std::string& name, const std::string& filePath){
     );
 
     if(result != SQLITE_OK){
-        std::cout << "Error inserting file:"
+        std::cout << "Error inserting file: "
                   << errorMessage
                   << std::endl;
 
@@ -205,4 +233,154 @@ void insertFile(const std::string& name, const std::string& filePath){
     }
 
     sqlite3_close(db);
+}
+
+int getFileID(const std::string& filePath){
+    sqlite3* db;
+
+    int result = sqlite3_open("data/baseline.db", &db);
+
+    if(result != SQLITE_OK){
+        std::cout << "Error opening database."
+                  << std::endl;
+
+        return -1;
+    }
+
+    int fileID = -1;
+
+    std::string sql =
+        "SELECT FileID FROM Files WHERE FilePath = '" +
+
+        filePath +
+
+        "';";
+
+    char* errorMessage = nullptr;
+
+    result = sqlite3_exec(
+        db,
+        sql.c_str(),
+        callbackFileID,
+        &fileID,
+        &errorMessage
+    );
+
+    if(result != SQLITE_OK){
+        std::cout << "Error retrieving FileID: "
+                  << errorMessage
+                  << std::endl;
+
+        sqlite3_free(errorMessage);
+    }
+
+    sqlite3_close(db);
+
+    return fileID;
+}
+
+bool fileExistsInDatabase(
+    const std::string& filePath
+){
+    sqlite3* db;
+
+    int result = sqlite3_open("data/baseline.db", &db);
+
+    if(result != SQLITE_OK){
+        std::cout << "Error opening database."
+                  << std::endl;
+
+        return false;
+    }
+
+    bool exists = false;
+
+    std::string sql =
+        "SELECT FileID FROM Files WHERE FilePath = '" +
+        filePath +
+        "' LIMIT 1;";
+
+    char* errorMessage = nullptr;
+
+    result = sqlite3_exec(
+        db,
+        sql.c_str(),
+        callbackFileExists,
+        &exists,
+        &errorMessage
+    );
+
+    if(result != SQLITE_OK){
+        std::cout << "Error checking file existence: "
+                  << errorMessage
+                  << std::endl;
+
+        sqlite3_free(errorMessage);
+    }
+
+    sqlite3_close(db);
+
+    return exists;
+}
+
+void insertBaseline(
+    int fileID,
+    const std::string& hash,
+    const std::string& timestamp,
+    const std::string& eventType
+){
+    sqlite3* db;
+
+    int result = sqlite3_open("data/baseline.db", &db);
+
+    if(result != SQLITE_OK){
+        std::cout << "Error opening database."
+                  << std::endl;
+
+        return;
+    }
+
+    std::string sql = 
+        "INSERT INTO Baselines "
+        "(FileID, Hash, Timestamp, EventType) VALUES (" +
+        
+        std::to_string(fileID) +
+        
+        ", '" +
+
+        hash +
+
+        "', '" +
+
+        timestamp +
+
+        "', '" +
+        
+        eventType +
+
+        "');";
+
+    char* errorMessage = nullptr;
+
+    result = sqlite3_exec(
+        db,
+        sql.c_str(),
+        nullptr,
+        nullptr,
+        &errorMessage
+    );
+
+    if(result != SQLITE_OK){
+        std::cout << "Error inserting baseline: "
+                  << errorMessage
+                  << std::endl;
+
+        sqlite3_free(errorMessage);
+    }
+    else{
+        std::cout << "Baseline inserted successfully!"
+                  << std::endl;
+    }
+
+    sqlite3_close(db);   
 }
