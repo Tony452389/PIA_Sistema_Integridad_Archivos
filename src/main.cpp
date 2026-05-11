@@ -32,8 +32,18 @@ Abril 2026
 int main(){
 
     initializeDatabase();
-    
-    std::string filePath = "data/test_file.txt";
+
+    insertFile("notes.txt", "data/notes.txt");
+
+    insertFile("config.text", "data/config.txt");
+
+    insertFile("system.conf", "data/system.conf");
+
+    insertFile("temp.log", "data/temp.log");
+
+    return 0;
+
+    /*d::string filePath = "data/test_file.txt";
 
     std::string baselinePath = "data/baseline.txt";
 
@@ -88,6 +98,5 @@ int main(){
     std::cout << "Status: "
               << status
               << std::endl;
-
-    return 0;
+    */
 }

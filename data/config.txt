@@ -1,0 +1,3 @@
+system_mode=normal
+debug=false
+version=1.0

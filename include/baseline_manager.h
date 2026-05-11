@@ -16,4 +16,11 @@ unsigned long loadBaseline(const std::string& path);
 //Funcion temporal para crear DB
 void initializeDatabase();
 
+//
+void insertFile(
+    const std::string& name,
+    const std::string& filePath
+);
+
+
 #endif

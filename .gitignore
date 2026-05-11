@@ -20,3 +20,6 @@ data/*.db
 
 # Configuración VS Code
 .vscode/
+
+# Archivo de pruebas
+!data/temp.log
