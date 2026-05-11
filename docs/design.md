@@ -4,6 +4,8 @@
 
 El sistema sigue una arquitectura modular diseñada para detectar cambios en archivos mediante el uso de funciones hash y comparación contra un baseline almacenado previamente.
 
+La arquitectura está preparada para evolucionar hacia un modelo de persistencia estructurada utilizando SQLite, permitiendo soportar múltiples registros y monitoreo escalable.
+
 El sistema se compone de cuatro módulos principales que trabajan de forma secuencial:
 
 File Scanner → Hash Engine → Baseline Manager → Risk Analyzer
@@ -34,9 +36,18 @@ include/file_scanner.h
 Responsable de:
 
 - Generar un hash del contenido del archivo
-- Usar un algoritmo hash simple basado en:
+- Mantener consistencia del algoritmo
+- Preparar compatibilidad futura con algoritmos criptográficos avanzados
+
+Versión actual del algoritmo:
 
 hash = hash * 31 + caracter
+
+La evolución planeada del módulo incluye:
+
+- Procesamiento de archivos por bloques
+- Manejo de hashes mediante std::string
+- Compatibilidad futura con SHA256
 
 Archivo:
 
@@ -50,9 +61,12 @@ include/hash_engine.h
 Responsable de:
 
 - Verificar si existe un baseline
-- Guardar el hash inicial
-- Leer el hash almacenado
+- Guardar hashes de integridad
+- Leer registros almacenados
 - Preparar datos para comparación
+- Gestionar persistencia del sistema
+
+La evolución del módulo contempla migración desde almacenamiento plano hacia persistencia estructurada mediante SQLite.
 
 Archivo:
 
@@ -84,10 +98,11 @@ include/risk_analyzer.h
 
 1. El sistema lee el archivo objetivo.
 2. Se genera un hash del contenido.
-3. Se verifica si existe un baseline.
-4. Si no existe, se crea uno.
+3. Se consulta el baseline almacenado.
+4. Si no existe registro previo, se crea uno.
 5. Si existe, se compara el hash actual con el almacenado.
-6. Se determina el estado del archivo:
+6. La persistencia evoluciona hacia almacenamiento estructurado mediante SQLite.
+7. Se determina el estado del archivo:
 
 SAFE → No hubo cambios  
 MODIFIED → Archivo alterado  
@@ -109,7 +124,12 @@ Herramientas:
 
 Dependencias externas:
 
-No se utilizan librerías externas en esta versión inicial.
+Dependencias externas previstas:
+
+- SQLite3 (persistencia estructurada)
+- OpenSSL (integración futura opcional)
+
+La versión actual del sistema no requiere dependencias externas obligatorias.
 
 ---
 
@@ -118,6 +138,8 @@ No se utilizan librerías externas en esta versión inicial.
 El sistema está diseñado para permitir expansión futura, incluyendo:
 
 - Soporte para múltiples archivos
+- Persistencia estructurada mediante SQLite
+- Historial de eventos y trazabilidad
 - Uso de algoritmos criptográficos (SHA256)
 - Clasificación avanzada de riesgos
 - Monitoreo automatizado

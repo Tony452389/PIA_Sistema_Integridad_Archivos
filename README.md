@@ -19,6 +19,7 @@ El sistema realiza las siguientes operaciones:
 * Guardar un baseline inicial
 * Comparar hashes en ejecuciones posteriores
 * Detectar modificaciones en archivos
+* Evolucionar hacia persistencia estructurada mediante SQLite para soportar multiples registros y monitoreo estable
 
 Los módulos principales del sistema son:
 
@@ -61,6 +62,7 @@ No se implementá aún:
 * Seleccion dinamica de archivos
 * Configuración mediante archivos externos
 * Uso de algoritmos criptografcos (SHA256)
+* Persistencia estructurada mediante SQLite
 * Monitoreo periódico automático
 
 Estas funcionalidades se desarrollarán en entregas posteriores.
@@ -109,22 +111,25 @@ PIA_Sistema_Integridad_Archivos/
 │   ├── file_scanner.cpp
 │   ├── hash_engine.cpp
 │   ├── baseline_manager.cpp
-│   ├── risk_analyzer.cpp
+│   └── risk_analyzer.cpp
 │
 ├── include/
 │   ├── file_scanner.h
 │   ├── hash_engine.h
 │   ├── baseline_manager.h
-│   ├── risk_analyzer.h
+│   └── risk_analyzer.h
 │
 ├── docs/
-│   └── design.md
+│   ├── design.md
+│   ├── roadmap-md
+│   └── project_overview.md
 │
 ├── evidence/
 │
 └── data/
     ├── test_file.txt
     └── baseline.txt
+```
 
 ---
 
@@ -158,6 +163,7 @@ Herramientas:
 * Github
 * Visual Studio Code
 * Ubuntu Virtual Machine
+* SQLite (planeado para avance 2)
 
 ---
 
@@ -178,9 +184,12 @@ El sistema actualmente:
 ---
 
 ## Notas Técnicas
+El sistema utiliza actualmente un algoritmo de hash simple basado en operaciones aritméticas para el primer avance.
 
-El sistema utiliza un algoritmo de hash simple basado en operaciones aritméticas para el primer avance.
+Durante la segunda fase del proyecto, el Hash Engine evolucionará hacia un procesamiento más eficiente por bloques y los hashes serán manejados mediante std::string para mantener compatibilidad con futuras mejoras criptográficas.
 
-En fases posteriores se migrará a algoritmos criptográficos más robustos como SHA256.
+La persistencia del baseline evolucionará de archivo plano hacia almacenamiento estructurado utilizando SQLite.
 
-El sistema se encuentra listo para expansion en la siguiente fase del proyecto.
+En fases posteriores se contempla la integración de algoritmos criptográficos más robustos como SHA256.
+
+El sistema se encuentra preparado para escalabilidad, soporte multiarchivo y clasificación avanzada de eventos.

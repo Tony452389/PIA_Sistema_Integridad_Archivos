@@ -1,90 +1,82 @@
-/*
-==========================================
-Proyecto: Sistema de Integridad de Archivos (SIA)
-
-Archivo:
-main.cpp
-
-Responsable:
-Josué Castro
-
-Descripción:
-Archivo principal del sistema.
-Coordina la ejecución de los módulos:
-File Scanner, Hash Engine,
-Baseline Manager y Risk Analyzer.
-
-Responsable también de la integración
-general del sistema.
-
-Fecha:
-Abril 2026
-==========================================
-*/
-
 #include "file_scanner.h"
 #include "hash_engine.h"
 #include "baseline_manager.h"
 #include "risk_analyzer.h"
 
 #include <iostream>
+#include <vector>
+#include <string>
 
 int main(){
-    std::string filePath = "data/test_file.txt";
 
-    std::string baselinePath = "data/baseline.txt";
+    int option;
 
-    std::cout << "File: "
-              << filePath
+    std::cout << std::endl;
+
+    std::cout << "===== File Integrity Monitor ====="
               << std::endl;
 
-    std::cout << "Leyendo el archivo..."
+    std::cout << std::endl;
+
+    std::cout << "1. Run Monitor"
               << std::endl;
 
-    std::string content = readFile(filePath);
+    std::cout << "2. Restore Test Environment"
+              << std::endl;
 
-    if(content.empty()){
-        std::cout << "Falla en la lectura del Archivo."
-                  << std::endl;
-        
-        return 1;
+    std::cout << "3. Exit"
+              << std::endl;
+
+    std::cout << std::endl;
+
+    std::cout << "Select an option: ";
+
+    std::cin >> option;
+
+    std::cout << std::endl;
+
+    switch(option){
+
+        case 1: {
+
+            initializeDatabase();
+
+            std::vector<std::string> targets =
+                loadTargets("data/targets.txt");
+
+            for(const auto& filePath : targets){
+
+                processFile(filePath);
+            }
+
+            displayLatestBaselines();
+
+            break;
+        }
+
+        case 2: {
+
+            restoreTestEnvironment();
+
+            break;
+        }
+
+        case 3: {
+
+            std::cout << "Exiting program."
+                      << std::endl;
+
+            break;
+        }
+
+        default: {
+
+            std::cout << "Invalid option."
+                      << std::endl;
+
+            break;
+        }
     }
-
-    std::cout << "Generando Hash..."
-              << std::endl;
-
-    unsigned long currentHash = generateHash(content);
-          
-    std::cout << "Hash generado: "
-              << currentHash
-              << std::endl;
-
-    if(!baselineExists(baselinePath)){
-        std::cout << "Baseline no encontrado."
-                  << std::endl;
-        
-        saveBaseline(baselinePath, currentHash);
-
-        std::cout << "Status: SEGURO"
-                  << std::endl;
-
-        return 0;
-    }
-
-    std::cout << "Baseline encontrado."
-                  << std::endl;
-
-    unsigned long storedHash = loadBaseline(baselinePath);
-    
-    std::cout << "Comparando hashes..."
-                  << std::endl;
-
-    std::string status = analyzeRisk(currentHash, storedHash);
-
-
-    std::cout << "Status: "
-              << status
-              << std::endl;
 
     return 0;
 }

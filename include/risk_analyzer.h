@@ -4,8 +4,16 @@
 
 #include <string>
 
-//Determina el estado del archivo
-std::string analyzeRisk(unsigned long currentHash,
-                        unsigned long storedHash);
+std::string determineEventType(
+    const std::string& currentHash,
+    const std::string& lastHash
+);
+
+bool isFileDeleted(
+    const std::string& filePath,
+    bool fileExistsonSystem
+);
+
+void processFile(const std::string& filePath);
 
 #endif
