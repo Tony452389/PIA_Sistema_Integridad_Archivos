@@ -1,11 +1,9 @@
 #ifndef HASH_ENGINE_H
-
 #define HASH_ENGINE_H
 
 #include <string>
+#include <iostream>
 
-//Genera un hash a partir del contenido del archivo
-unsigned long generateHash(const std::string& content);
+std::string generateHash(std::istream& dataStream);
 
 #endif
-
