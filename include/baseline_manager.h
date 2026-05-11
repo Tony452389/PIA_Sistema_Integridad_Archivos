@@ -38,4 +38,6 @@ void insertBaseline(
 
 std::string getLastHash(int fileID);
 
+std::string getCurrentTimestamp();
+
 #endif

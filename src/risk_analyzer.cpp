@@ -24,13 +24,34 @@ Abril 2026
 */
 
 #include "risk_analyzer.h"
+#include "baseline_manager.h"
 
-std::string analyzeRisk(unsigned long currentHash, unsigned long storedHash){
-    if(currentHash == storedHash){
-        return "SEGURO";
+std::string determineEventType(
+    const std::string& currentHash,
+    const std::string& lastHash
+){
 
+    if(lastHash.empty()){
+
+        return "NEW";
     }
-    else{ 
-        return "MODIFICADO";
+
+    if(currentHash == lastHash){
+
+        return "UNCHANGED";
     }
+
+    return "MODIFIED";
+}
+
+bool isFileDeleted(
+    const std::string& filePath,
+    bool fileExistsOnSystem
+){
+    if(!fileExistsOnSystem && fileExistsInDatabase(filePath)){
+        
+        return true;
+    }
+
+    return false;
 }

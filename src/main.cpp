@@ -28,121 +28,102 @@ Abril 2026
 #include "risk_analyzer.h"
 
 #include <iostream>
-#include <fstream>
+#include <string>
+
+#include <vector>
 
 int main(){
     initializeDatabase();
 
-    std::string fileName = "config.txt";
-    std::string filePath = "data/config.txt";
+    //Carga la lista de archivos desde targets.txt
+    std::vector <std::string> targets = loadTargets("data/targets.txt");
 
-    //Verifica si el archivo ya existe en la tabla Files
-    if(!fileExistsInDatabase(filePath)){
-        insertFile(fileName, filePath);
-    }
-
-    //Obtiene FileID
-    int fileID = getFileID(filePath);
-
-    std::cout <<"FileID:" 
-              << fileID
-              << std::endl;
-    
-    //Abre el archivo para generar el Hash
-    std::ifstream file(filePath);
-
-    if(!file){
-        std::cout << "Error opening file."
+    //Recorre cada archivo objetivo
+    for(const auto& filePath : targets){
+        std::cout << "\nProcessing: "
+                  << filePath
                   << std::endl;
 
-        return 1;
+        //Verifica si el archivo existe fisicamente
+        bool existsOnSystem = fileExistsOnSystem(filePath);
+
+        //Verifica si el archivo existe en la DB
+        bool existsOnDatabase = fileExistsInDatabase(filePath);
+
+        //Verifica DELETED
+        if(!existsOnSystem && existsOnDatabase){
+            int fileID = getFileID(filePath);
+
+            std::string lastHash = getLastHash(fileID);
+
+            std::string timestamp = getCurrentTimestamp();
+
+            insertBaseline(
+                fileID,
+                lastHash,
+                timestamp,
+                "DELETED"
+            );
+
+            std::cout << "Event: DELETED"
+                      << std::endl;
+
+            continue;
+        }
+
+        //Archivo inexistente y desconocido
+        if(!existsOnSystem && !existsOnDatabase){
+            std::cout << "File not found."
+                      << std::endl;
+
+            continue;
+        }
+
+        //Inserta Archivo si es nuevo
+        if(!existsOnDatabase){
+            insertFile(
+                filePath,
+                filePath
+            );
+        }
+
+        //Obtiene FileID
+        int fileID = getFileID(filePath);
+
+        //Abre el archivo
+        std::ifstream file = openFile(filePath);
+
+        if(!file){
+            std::cout << "Error opening file."
+                      << std::endl;
+
+            continue;
+        }
+
+        //Genera Hash actual
+        std::string currentHash = generateHash(file);
+
+        //Recupera ultimo Hash
+        std::string lastHash = getLastHash(fileID);
+
+        //Determina evento
+        std::string eventType = determineEventType(currentHash, lastHash);
+
+        //Obtiene timestamp
+        std::string timestamp = getCurrentTimestamp();
+
+        //Registra baseline
+        insertBaseline(
+            fileID,
+            currentHash,
+            timestamp,
+            eventType
+        );
+
+        std::cout << "Event: "
+                  << eventType
+                  << std::endl;
     }
-
-    //Generar Hash actual
-    std::string currentHash = generateHash(file);
-
-    std::cout <<"Current Hash:" 
-              << currentHash
-              << std::endl;
-
-    //Obtener ultimo Hash registrado
-    std::string lastHash = getLastHash(fileID);
-
-    std::cout <<"Last Hash:" 
-              << lastHash
-              << std::endl;
-
-    //parametros temporales
-    std::string eventType = "NEW";
-    std::string timestamp = "2026-05-10 02:00";
-
-    
-    insertBaseline(
-        fileID,
-        currentHash,
-        timestamp,
-        eventType
-    );
 
     return 0;
 }
-
-    /*
-    Main original de entrega 1
-
-    d::string filePath = "data/test_file.txt";
-
-    std::string baselinePath = "data/baseline.txt";
-
-    std::cout << "File: "
-              << filePath
-              << std::endl;
-
-    std::cout << "Leyendo el archivo..."
-              << std::endl;
-
-    std::string content = readFile(filePath);
-
-    if(content.empty()){
-        std::cout << "Falla en la lectura del Archivo."
-                  << std::endl;
-        
-        return 1;
-    }
-
-    std::cout << "Generando Hash..."
-              << std::endl;
-
-    unsigned long currentHash = generateHash(content);
-          
-    std::cout << "Hash generado: "
-              << currentHash
-              << std::endl;
-
-    if(!baselineExists(baselinePath)){
-        std::cout << "Baseline no encontrado."
-                  << std::endl;
-        
-        saveBaseline(baselinePath, currentHash);
-
-        std::cout << "Status: SEGURO"
-                  << std::endl;
-
-        return 0;
-    }
-
-    std::cout << "Baseline encontrado."
-                  << std::endl;
-
-    unsigned long storedHash = loadBaseline(baselinePath);
-    
-    std::cout << "Comparando hashes..."
-                  << std::endl;
-
-    std::string status = analyzeRisk(currentHash, storedHash);
-
-
-    std::cout << "Status: "
-              << status
-              << std::endl;
-    */

@@ -25,42 +25,42 @@ Abril 2026
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <string>
 
-std::string readFile(const std::string& filePath){
-    std::ifstream file (filePath);
+#include <vector>
 
-    if(!file.is_open()){
-        std::cerr << "Error: Could not open file: "
-                  << filePath << std::endl;
+bool fileExistsOnSystem(const std::string& filePath){
+    std::ifstream file(filePath);
 
-        return "";          
-    }
-
-    std::stringstream buffer;
-
-    buffer << file.rdbuf();
-
-    file.close();
-
-    return buffer.str();
+    return file.good();
 }
 
-/*
------------------------------------------------------------------ Para Avance 2 ----------------------------------------------------------------------------------
-File Scanner debería evolucionar a:
+std::ifstream openFile(const std::string& filePath){
+        std::ifstream file(filePath);
 
-Responsabilidades nuevas
-✔ verificar existencia de archivos
- ✔ manejar rutas
- ✔ leer targets.txt
- ✔ devolver lista de archivos
- ✔ validar accesibilidad
+        return file;
+}
 
- Ya no
- ✔ abrir archivo
-✔ leer contenido
-✔ devolver string completo 
+std::vector <std::string> loadTargets(const std::string& targetsPath){
+    std::vector <std::string> targets;
 
-*/
+    std::ifstream file(targetsPath);
 
+    if(!file){
+        std::cout << "Error opening targets file."
+                  << std::endl;
+        
+        return targets;
+    }
+
+    std::string line;
+    
+    while(std::getline(file, line)){
+        if(!line.empty()){
+            targets.push_back(line);
+        }
+    }
+
+    return targets;
+}
 
