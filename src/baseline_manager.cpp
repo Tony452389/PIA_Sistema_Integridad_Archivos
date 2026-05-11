@@ -59,6 +59,19 @@ static int callbackFileExists(
 
     return 0;
 }
+//Callback de apoyo para obtener el ultimo Hash
+static int callbackLastHash(
+    void* data,
+    int argc,
+    char** argv,
+    char** azColName
+){
+    if(argc > 0 && argv[0] != nullptr){
+        *(static_cast <std::string*> (data)) = argv[0];
+    }
+
+    return 0;
+}
 
 bool baselineExists(const std::string& path){
     std::ifstream file(path);
@@ -383,4 +396,49 @@ void insertBaseline(
     }
 
     sqlite3_close(db);   
+}
+
+std::string getLastHash(int fileID){
+    sqlite3* db;
+
+    int result = sqlite3_open("data/baseline.db", &db);
+
+    if(result != SQLITE_OK){
+        std::cout << "Error opening database."
+                  << std::endl;
+
+        return "";
+    }
+
+    std::string lastHash = "";
+
+    std::string sql =
+        "SELECT Hash FROM Baselines "
+        "WHERE FileID = " +
+
+        std::to_string(fileID) +
+
+        " ORDER BY BaselineID DESC LIMIT 1;";
+
+    char* errorMessage = nullptr;
+
+    result = sqlite3_exec(
+        db,
+        sql.c_str(),
+        callbackLastHash,
+        &lastHash,
+        &errorMessage
+    );
+
+    if(result != SQLITE_OK){
+        std::cout << "Error retrieving last hash: "
+                  << errorMessage
+                  << std::endl;
+
+        sqlite3_free(errorMessage);
+    }
+
+    sqlite3_close(db);
+
+    return lastHash;
 }

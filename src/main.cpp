@@ -28,39 +28,69 @@ Abril 2026
 #include "risk_analyzer.h"
 
 #include <iostream>
+#include <fstream>
 
 int main(){
-
     initializeDatabase();
 
-     if(!fileExistsInDatabase("data/notes.txt")){
-        insertFile("notes.txt", "data/notes.txt");
+    std::string fileName = "config.txt";
+    std::string filePath = "data/config.txt";
+
+    //Verifica si el archivo ya existe en la tabla Files
+    if(!fileExistsInDatabase(filePath)){
+        insertFile(fileName, filePath);
     }
 
-    if(!fileExistsInDatabase("data/config.txt")){
-        insertFile("config.text", "data/config.txt");
+    //Obtiene FileID
+    int fileID = getFileID(filePath);
+
+    std::cout <<"FileID:" 
+              << fileID
+              << std::endl;
+    
+    //Abre el archivo para generar el Hash
+    std::ifstream file(filePath);
+
+    if(!file){
+        std::cout << "Error opening file."
+                  << std::endl;
+
+        return 1;
     }
 
-    if(!fileExistsInDatabase("data/system.conf")){
-        insertFile("system.conf", "data/system.conf");
-    }
+    //Generar Hash actual
+    std::string currentHash = generateHash(file);
 
-    if(!fileExistsInDatabase("data/temp.log")){
-        insertFile("temp.log", "data/temp.log");
-    }
+    std::cout <<"Current Hash:" 
+              << currentHash
+              << std::endl;
 
-    int fileID = getFileID("data/config.txt");
+    //Obtener ultimo Hash registrado
+    std::string lastHash = getLastHash(fileID);
 
+    std::cout <<"Last Hash:" 
+              << lastHash
+              << std::endl;
+
+    //parametros temporales
+    std::string eventType = "NEW";
+    std::string timestamp = "2026-05-10 02:00";
+
+    
     insertBaseline(
         fileID,
-        "123456789",
-        "2026-05-10 15:00",
-        "NEW"
+        currentHash,
+        timestamp,
+        eventType
     );
 
     return 0;
+}
 
-    /*d::string filePath = "data/test_file.txt";
+    /*
+    Main original de entrega 1
+
+    d::string filePath = "data/test_file.txt";
 
     std::string baselinePath = "data/baseline.txt";
 
@@ -116,4 +146,3 @@ int main(){
               << status
               << std::endl;
     */
-}

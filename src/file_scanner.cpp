@@ -45,4 +45,22 @@ std::string readFile(const std::string& filePath){
     return buffer.str();
 }
 
+/*
+----------------------------------------------------------------- Para Avance 2 ----------------------------------------------------------------------------------
+File Scanner debería evolucionar a:
+
+Responsabilidades nuevas
+✔ verificar existencia de archivos
+ ✔ manejar rutas
+ ✔ leer targets.txt
+ ✔ devolver lista de archivos
+ ✔ validar accesibilidad
+
+ Ya no
+ ✔ abrir archivo
+✔ leer contenido
+✔ devolver string completo 
+
+*/
+
 
