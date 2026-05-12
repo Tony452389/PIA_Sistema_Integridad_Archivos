@@ -13,9 +13,13 @@ file_monitor
 
 # Archivos generados
 baseline.txt
+data/*.db
 
 # Carpetas del sistema
 .DS_Store
 
 # Configuración VS Code
 .vscode/
+
+# Archivo de pruebas
+!data/temp.log

@@ -1,0 +1,2 @@
+system_mode=production
+max_connections=32
