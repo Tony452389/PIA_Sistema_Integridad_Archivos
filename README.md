@@ -43,9 +43,10 @@ El sistema actualmente es capaz de:
 * Mostrar el estado del archivo:
 
 ```
-SAFE
-MODIFIED
 NEW
+UNCHANGED
+MODIFIED
+DELETED
 ```
 
 * Persistir el baseline mediante SQLite
@@ -83,12 +84,7 @@ Para compilar el proyecto:
 make
 ```
 
-Esto generará los ejecutables en `/bin`:
-
-```
-bin/file_monitor          # versión con símbolos (debug)
-bin/file_monitor_strip    # versión sin símbolos (release)
-```
+Esto generará el ejecutable `./file_monitor` en la raíz del repositorio. El Makefile será ajustado para generar los ejecutables en `/bin` en la siguiente entrega.
 
 ---
 
@@ -97,16 +93,32 @@ bin/file_monitor_strip    # versión sin símbolos (release)
 Para ejecutar el programa:
 
 ```bash
-./bin/file_monitor
+./bin/file_monitor_debug
 ```
 
-Para analizar un archivo específico:
+Al iniciar, el programa presenta un menú interactivo:
 
-```bash
-./bin/file_monitor <ruta/al/archivo>
+```
+===== File Integrity Monitor =====
+
+1. Run Monitor
+2. Restore Test Environment
+3. Exit
+
+Select an option:
 ```
 
-El programa reportará el estado del archivo analizado.
+**Opción 1 — Run Monitor:** Procesa todos los archivos listados en `data/targets.txt`, genera o compara sus hashes contra el baseline en SQLite y reporta el estado de cada uno en una tabla al finalizar.
+
+**Opción 2 — Restore Test Environment:** Restaura el entorno de prueba al estado inicial. Salida esperada:
+
+```
+Test environment restored successfully.
+```
+
+**Opción 3 — Exit:** Cierra el programa.
+
+Para agregar archivos al monitoreo, incluir su ruta dentro de `data/targets.txt`. Los resultados pueden no ser tan consistentes como con los archivos de prueba utilizados, dependiendo del contenido y ubicación de los archivos agregados.
 
 ---
 
@@ -133,23 +145,30 @@ PIA_Sistema_Integridad_Archivos/
 │   └── risk_analyzer.h
 │
 ├── bin/
-│   ├── file_monitor
-│   └── file_monitor_strip
+│   ├── file_monitor_debug
+│   └── file_monitor_release
 │
 ├── docs/
 │   ├── design.md
 │   ├── roadmap.md
 │   ├── tests.md
-│   └── report_draft.md
+│   ├── report_draft.md
+│   └── project_overview.md
 │
 ├── analysis/
 │   ├── strings_output.txt
 │   └── reversing_notes.md
 │
 ├── evidence/
+│   ├── 1er_Avance/
+│   └── 2do_Avance/
 │
 └── data/
-    ├── test_file.txt
+    ├── config.txt
+    ├── notes.txt
+    ├── system.conf
+    ├── temp.log
+    ├── targets.txt
     └── baseline.db
 ```
 
@@ -157,17 +176,13 @@ PIA_Sistema_Integridad_Archivos/
 
 ## Integrantes y Responsabilidades Técnicas
 
-Ricardo Hervey Estrada Garcia — File Scanner
-Responsable de la lectura de archivos y verificación de existencia.
+**Josué Castro Aguilar** — Arquitectura principal del sistema, manejo de la base de datos SQLite y generación del baseline.
 
-Marco Antonio Guadalupe — Hash Engine
-Responsable de la generación del hash del contenido del archivo por bloques.
+**Marco Vargas** — Desarrollo del módulo de hashing y análisis estático/reversing del binario mediante Ghidra.
 
-Josue Israel Castro Aguilar — Baseline Manager e Integración
-Responsable del almacenamiento y comparación del baseline en SQLite.
+**Ricardo Estrada García** — Apoyo en la lógica de procesamiento de archivos y elaboración de documentación técnica preliminar.
 
-Sergio Pedro Sepulveda Rodriguez — Risk Analyzer
-Responsable de la interpretación del estado del archivo.
+**Sergio Sepúlveda Rodríguez** — Revisión del repositorio, organización de evidencias y soporte documental para la entrega.
 
 ---
 
@@ -199,7 +214,7 @@ El sistema actualmente:
 
 * Compila correctamente
 * Ejecuta sin errores
-* Genera Hashes por bloques
+* Genera hashes por bloques
 * Crea y actualiza Baseline en SQLite
 * Detecta modificaciones en múltiples archivos
 * Produce binarios debug y release
@@ -214,4 +229,4 @@ La persistencia del baseline migró de archivo plano hacia almacenamiento estruc
 
 En la fase final del proyecto se contempla la integración de algoritmos criptográficos más robustos como SHA256 mediante OpenSSL.
 
-El sistema se encuentra preparado para escalabilidad, monitoreo automático y clasificación avanzada de eventos.
+El sistema se encuentra preparado para escalabilidad, monitoreo automático y clasificación de eventos.
