@@ -156,8 +156,9 @@ PIA_Sistema_Integridad_Archivos/
 │   └── project_overview.md
 │
 ├── analysis/
-│   ├── strings_output.txt
+│   ├── strings.txt
 │   └── reversing_notes.md
+│   └── functions.md
 │
 ├── evidence/
 │   ├── 1er_Avance/
@@ -168,8 +169,7 @@ PIA_Sistema_Integridad_Archivos/
     ├── notes.txt
     ├── system.conf
     ├── temp.log
-    ├── targets.txt
-    └── baseline.db
+    └── targets.txt
 ```
 
 ---
