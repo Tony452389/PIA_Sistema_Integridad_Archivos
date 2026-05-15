@@ -3,7 +3,13 @@
 
 #include <string>
 #include <iostream>
+#include <stdexcept>
 
-std::string generateHash(std::istream& dataStream);
+enum class HashAlgorithm {
+    ROLLING_HASH, 
+    CRC32        
+};
+
+std::string generateHash(std::istream& dataStream, HashAlgorithm algo = HashAlgorithm::ROLLING_HASH);
 
 #endif
