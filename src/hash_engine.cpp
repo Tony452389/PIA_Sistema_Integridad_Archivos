@@ -21,18 +21,26 @@ Abril 2026
 */
 
 #include "hash_engine.h"
+#include <stdexcept>
 
 std::string generateHash(std::istream& dataStream) {
+    if (!dataStream) {
+        throw std::runtime_error("Error: El flujo de datos no es válido o el archivo es inaccesible.");
+    }
+
     unsigned long hash = 0;
     const size_t BUFFER_SIZE = 4096;
     char buffer[BUFFER_SIZE];
 
-    while (dataStream.read(buffer, BUFFER_SIZE) || dataStream.gcount() > 0) {
-        for (std::streamsize i = 0; i < dataStream.gcount(); ++i) {
-            hash = hash * 31 + static_cast<unsigned char>(buffer[i]);
+    try {
+        while (dataStream.read(buffer, BUFFER_SIZE) || dataStream.gcount() > 0) {
+            for (std::streamsize i = 0; i < dataStream.gcount(); ++i) {
+                hash = hash * 31 + static_cast<unsigned char>(buffer[i]);
+            }
         }
+    } catch (const std::exception& e) {
+        return "ERROR_HASH_CONSISTENCY"; // Validación de consistencia
     }
 
-    // Conversión a std::string antes de retornar
     return std::to_string(hash);
 }
